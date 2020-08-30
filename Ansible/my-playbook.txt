@@ -1,0 +1,37 @@
+                                             
+ 1 ---
+ 2   - name: Config Web VM with Docker
+ 3     hosts: webservers
+ 4     become: true
+ 5     tasks:
+ 6
+ 7     - name: docker.io
+ 8       apt:
+ 9         force_apt_get: yes
+10         update_cache: yes
+11         name: docker.io
+12         state: present
+13
+14     - name: Install pip3
+15       apt:
+16         force_apt_get: yes
+17         name: python3-pip
+18         state: present
+19
+20     - name: Install Docker python module
+21       pip:
+22         name: docker
+23         state: present
+24
+25     - name: download and launch a docker web container
+26       docker_container:
+27         name: dvwa
+28         image: cyberxsecurity/dvwa
+29         state: started
+30         published_ports: 80:80
+31
+32     - name: Enable docker service
+33       systemd:
+34         name: docker
+35         enabled: yes
+36
