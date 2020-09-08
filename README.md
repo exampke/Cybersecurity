@@ -20,9 +20,9 @@ This document contains the following details:
 
 The main purpose of this network is to expose a load-balanced and monitored instance of DVWA, the D*mn Vulnerable Web Application.
 
-Load balancing ensures that the application will be highly redundant, in addition to restricting unauthorized IP adresses access to the network.
-- _TODO: What aspect of security do load balancers protect? What is the advantage of a jump box?_
-
+Load balancing ensures that the application will be highly redundant, in addition to restricting unauthorized traffic the network.
+- The load balancer receives any traffic that comes into the website and distributes it across multiple servers. This helps distribute traffic evenly among the servers and mitigates DDoS attacks
+- A jump box provides an enterprise's admins with a secure computer to connect to before launching any administrative task. Additionally, it can be used, as it is here, as an origination point to connect to other servers or untrusted environments. The Jump-Box provides a highly secured environment that is used solely for administrative tasks.
 Integrating an ELK server allows users to easily monitor the vulnerable VMs for changes to the log files and system metrics.
 
 The configuration details of each machine may be found below.
@@ -38,24 +38,24 @@ The configuration details of each machine may be found below.
 
 The machines on the internal network are not exposed to the public Internet. 
 
-Only the _____ machine can accept connections from the Internet. Access to this machine is only allowed from the following IP addresses:
-- _TODO: Add whitelisted IP addresses_
+Only the Jump-box provisioner can accept connections from the Internet. Access to this machine is only allowed from the following IP addresses:
+- 68.106.25.252
 
-Machines within the network can only be accessed by _____.
-- _TODO: Which machine did you allow to access your ELK VM? What was its IP address?_
+Machines within the network can only be accessed by SSH.
+- The Elk VM can be accessed from the Ansible container on the Jump-box-provisioner (40.78.91.188; 10.1.0.7).
 
 A summary of the access policies in place can be found in the table below.
 
 | Name     | Publicly Accessible | Allowed IP Addresses |
 |----------|---------------------|----------------------|
-| Jump Box | Yes/No              | 10.0.0.1 10.0.0.2    |
-| Web-1                       |                      |
-| Web-2                       |                      |
+| Jump Box | Yes              | 10.1.0.7     |
+| Web-1    | No                  | 10.1.0.5                     |
+| Web-2    | No                  | 10.1.0.6                     |
 
 ### Elk Configuration
 
 Ansible was used to automate configuration of the ELK machine. No configuration was performed manually, which is advantageous because...
-- _TODO: What is the main advantage of automating configuration with Ansible?_
+- This approach employs Infrastructure as code (IaC), which allows each component to be individually defined with code. So, from a security standpoint, we can quickly bring a particular piece of infrastructure up and running within a few minutes by running the code that defines the piece of infrastructure. Also, if the infrastructure is  ever compromised, we can destroy it and deploy a new version within minutes. As such, we can clearly build in security protocols from the ground up.
 
 The playbook implements the following tasks:
 - _TODO: In 3-5 bullets, explain the steps of the ELK installation play. E.g., install Docker; download image; etc._
@@ -80,9 +80,9 @@ These Beats allow us to collect the following information from each machine:
 In order to use the playbook, you will need to have an Ansible control node already configured. Assuming you have such a control node provisioned: 
 
 SSH into the control node and follow the steps below:
-- Copy the _____ file to _____.
+- Copy the filebeat-playbook.yml file to /etc/ansible/roles. Within the playbook, a command will copy the playbook to your ElkServer.
 - Update the _____ file to include...
-- Run the playbook, and navigate to http://[your.VM.IP]:5601/app/kibana. to check that the installation worked as expected.
+- Run the playbook, and navigate to http://40.88.126.91:5601/app/kibana. to check that the installation worked as expected.
 
 _TODO: Answer the following questions to fill in the blanks:_
 - _Which file is the playbook? Where do you copy it?_
