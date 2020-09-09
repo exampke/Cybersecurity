@@ -2,11 +2,11 @@
 
 The files in this repository were used to configure the network depicted below.
 
-[https://github.com/exampke/Joshua-Clow-/blob/master/Diagrams/JClow's%20ELK%20stack.jpg](Images/diagram_filename.png)
+![https://github.com/exampke/Cybersecurity/blob/master/Diagrams/JClow's%20ELK%20stack.jpg](Images/diagram_filename.png)
 
 These files have been tested and used to generate a live ELK deployment on Azure. They can be used to either recreate the entire deployment pictured above. Alternatively, select portions of the docker file may be used to install only certain pieces of it, such as Filebeat.
 
-https://github.com/exampke/Joshua-Clow-/blob/master/Ansible/elk-playbook.txt
+https://github.com/exampke/Cybersecurity/blob/master/Ansible/elk-playbook.txt
 
 This document contains the following details:
 - Description of the Topology
@@ -48,19 +48,21 @@ A summary of the access policies in place can be found in the table below.
 
 | Name     | Publicly Accessible | Allowed IP Addresses |
 |----------|---------------------|----------------------|
-| Jump Box | Yes              | 10.1.0.7     |
-| Web-1    | No                  | 10.1.0.5                     |
-| Web-2    | No                  | 10.1.0.6                     |
+| Jump Box | Yes              | 68.106.25.252    |
+| Web-1    | No                  | 10.1.0.7 10.1.0.6 10.0.0.4             |
+| Web-2    | No                  | 10.1.0.7 10.1.0.5 10.0.0.4             |
+| Elk-server| No                 |10.1.0.7                                |
 
 ### Elk Configuration
 
 Ansible was used to automate configuration of the ELK machine. No configuration was performed manually, which is advantageous because...
-- This approach employs Infrastructure as code (IaC), which allows each component to be individually defined with code. So, from a security standpoint, we can quickly bring a particular piece of infrastructure up and running within a few minutes by running the code that defines the piece of infrastructure. Also, if the infrastructure is  ever compromised, we can destroy it and deploy a new version within minutes. As such, we can clearly build in security protocols from the ground up.
+- This approach employs Infrastructure as code (IaC), which allows each component to be individually defined with code. So, from a security standpoint, we can quickly bring a particular piece of infrastructure up and running within a few minutes by running the code that defines the piece of infrastructure. Also, if the infrastructure is  ever compromised, we can destroy it and redeploy a new working version within minutes. As such, we can build in security protocols from the ground up.
 
 The playbook implements the following tasks:
-- _TODO: In 3-5 bullets, explain the steps of the ELK installation play. E.g., install Docker; download image; etc._
-- ...
-- ...
+- Installs Docker
+- Downloads the required images
+- Installs the configurations to the ELK server
+- Installs the Filebeat configurations to the DVWA servers
 
 The following screenshot displays the result of running `docker ps` after successfully configuring the ELK instance.
 
@@ -68,25 +70,22 @@ The following screenshot displays the result of running `docker ps` after succes
 
 ### Target Machines & Beats
 This ELK server is configured to monitor the following machines:
-- _TODO: List the IP addresses of the machines you are monitoring_
+- Web-1 10.1.0.5
+- Web-2 10.1.0.6
 
 We have installed the following Beats on these machines:
-- _TODO: Specify which Beats you successfully installed_
+- filebeat-7.4.0-amd64.deb
 
 These Beats allow us to collect the following information from each machine:
-- _TODO: In 1-2 sentences, explain what kind of data each beat collects, and provide 1 example of what you expect to see. E.g., `Winlogbeat` collects Windows logs, which we use to track user logon events, etc._
+-  Filebeat is used to format log files and has the ability to forward this data elsewhere to be processed and analyzed (such as an ELK server in this scenario). This data will contain information such as event logs to track the activity on the system.
 
 ### Using the Playbook
 In order to use the playbook, you will need to have an Ansible control node already configured. Assuming you have such a control node provisioned: 
 
 SSH into the control node and follow the steps below:
-- Copy the filebeat-playbook.yml file to /etc/ansible/roles. Within the playbook, a command will copy the playbook to your ElkServer.
-- Update the _____ file to include...
+- Copy the elk-playbook.yml file to the /etc/ansible folder.
+- Copy the filebeat-config.yml file to the /etc/ansible/files folder. Enusre the IP addresses in this file set to your ELK server public IP and port 5601.
+- Copy the filebeat-playbook.yml file to the /etc/ansible/files folder.
+- Update the /etc/ansible/hosts file to include a webservers section and an ELK servers section. From here, edit this file to include the IP addresses of the respective VM’s. 
+- Run the filebeat-playbook.yml file to install Filebeat on your webservers.
 - Run the playbook, and navigate to http://40.88.126.91:5601/app/kibana. to check that the installation worked as expected.
-
-_TODO: Answer the following questions to fill in the blanks:_
-- _Which file is the playbook? Where do you copy it?_
-- _Which file do you update to make Ansible run the playbook on a specific machine? How do I specify which machine to install the ELK server on versus which to install Filebeat on?_
-- _Which URL do you navigate to in order to check that the ELK server is running?
-
-_As a **Bonus**, provide the specific commands the user will need to run to download the playbook, update the files, etc._
